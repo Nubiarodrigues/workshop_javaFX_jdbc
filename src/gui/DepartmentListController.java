@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,8 +15,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.entities.Department;
+import model.services.DepartmentService;
 
 public class DepartmentListController implements Initializable {
+	
+	
+	private DepartmentService departmentService;
 
 	@FXML
 	private TableView<Department> tableViewDepartment;
@@ -26,10 +33,16 @@ public class DepartmentListController implements Initializable {
 
 	@FXML
 	private Button btNew;
+	
+	private ObservableList<Department> obsList;
 
 	@FXML
 	public void onBtNewAction() {
 		System.out.println("onBtNewAction");
+	}
+	
+	public void setDepartmentService(DepartmentService departmentService) {
+		this.departmentService = departmentService;
 	}
 
 	@Override
@@ -44,6 +57,17 @@ public class DepartmentListController implements Initializable {
 		// fazer o tableView acompanhar o tamanho da janela
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewDepartment.prefHeightProperty().bind(stage.heightProperty());
+	}
+	
+	// método responsável por acessar os serviços, carregar os department e jogar eles pra o ObservableList
+	public void updateTableView() {
+		if(departmentService == null) {
+			throw new IllegalStateException("Serviço nulo!");
+		}
+		
+		List<Department> list = departmentService.findAll();
+		obsList = FXCollections.observableArrayList(list); // instancia o obsList pegando os dados do findAll.
+		tableViewDepartment.setItems(obsList);
 	}
 
 }
