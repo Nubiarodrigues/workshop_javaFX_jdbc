@@ -44,6 +44,7 @@ public class DepartmentListController implements Initializable {
 
 	private ObservableList<Department> obsList;
 
+
 	@FXML
 	public void onBtNewAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
@@ -89,6 +90,7 @@ public class DepartmentListController implements Initializable {
 			
 			DepartmentFormController controller = loader.getController();
 			controller.setDepartment(obj);
+			controller.setDepartmentService(new DepartmentService());
 			controller.updateFormDate();
 
 			Stage dialogStage = new Stage();
